@@ -10,9 +10,9 @@ Webinar Topics:
 - Debug and inject nodes
 5. Check out additional Node-RED flows in my [TJBot-Node-RED](https://github.com/johnwalicki/TJBot-Node-RED) repository.
 
-This Node-RED-Introduction101 repository includes a presentation, [Node-RED Flows](NodeRED-examples.flow), Node-RED Flow [screenshots](/Screenshots/) that can be used during a pre-hackathon webinar.
+This Node-RED-Introduction101 repository includes a presentation, [Node-RED Flows](NodeRED-Intro-examples.flow), Node-RED Flow [screenshots](/Screenshots/) that can be used during a pre-hackathon webinar.
 
-Presenters: John Walicki
+Presenter: [John Walicki](https://github.com/johnwalicki/)
 
 ## Node-RED flows in this repository:
 This flow describes how to create the basic Hello World in a few steps.
