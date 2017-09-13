@@ -1,0 +1,672 @@
+[
+    {
+        "id": "5bba8d86.6c7bbc",
+        "type": "tab",
+        "label": "Hello World"
+    },
+    {
+        "id": "2428501e.86545",
+        "type": "tab",
+        "label": "Hello World in German"
+    },
+    {
+        "id": "3e0df11a.8f1486",
+        "type": "tab",
+        "label": "Weather"
+    },
+    {
+        "id": "68157612.5bc228",
+        "type": "tab",
+        "label": "Tone Analzyer"
+    },
+    {
+        "id": "259cd171.16da96",
+        "type": "twilio-api",
+        "z": "",
+        "sid": "",
+        "from": "",
+        "name": ""
+    },
+    {
+        "id": "a5421f62.7dc89",
+        "type": "twitter-credentials",
+        "z": "",
+        "screen_name": ""
+    },
+  
+    {
+        "id": "b1bcfaa8.6c3b28",
+        "type": "comment",
+        "z": "3e0df11a.8f1486",
+        "name": "Berlin latitude/longitude - 52.50190,13.40868",
+        "info": "",
+        "x": 370,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "d6cfd104.cef7c8",
+        "type": "inject",
+        "z": "5bba8d86.6c7bbc",
+        "name": "",
+        "topic": "",
+        "payload": "Hello World",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 230,
+        "y": 120,
+        "wires": [
+            [
+                "11e5f89a.e94297"
+            ]
+        ]
+    },
+    {
+        "id": "11e5f89a.e94297",
+        "type": "debug",
+        "z": "5bba8d86.6c7bbc",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 470,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "7f5ab901.5f032",
+        "type": "inject",
+        "z": "2428501e.86545",
+        "name": "",
+        "topic": "",
+        "payload": "I am a Berliner",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 180,
+        "y": 100,
+        "wires": [
+            [
+                "94964a2e.253ce8"
+            ]
+        ]
+    },
+    {
+        "id": "84f138eb.2f085",
+        "type": "debug",
+        "z": "2428501e.86545",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 610,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "94964a2e.253ce8",
+        "type": "watson-translator",
+        "z": "2428501e.86545",
+        "name": "",
+        "action": "translate",
+        "basemodel": "ar-en",
+        "domain": "news",
+        "srclang": "en",
+        "destlang": "de",
+        "password": "",
+        "custom": "",
+        "domainhidden": "news",
+        "srclanghidden": "en",
+        "destlanghidden": "de",
+        "basemodelhidden": "ar-en",
+        "customhidden": "",
+        "filetype": "forcedglossary",
+        "trainid": "",
+        "lgparams2": true,
+        "ldparamshidden2": "true",
+        "x": 400,
+        "y": 100,
+        "wires": [
+            [
+                "84f138eb.2f085"
+            ]
+        ]
+    },
+    {
+        "id": "1263e720.6beaf9",
+        "type": "weather_insights",
+        "z": "3e0df11a.8f1486",
+        "name": "",
+        "host": "twcservice.mybluemix.net",
+        "service": "/forecast/daily/10day.json",
+        "geocode": "52.50190,13.40868",
+        "units": "m",
+        "language": "",
+        "x": 360,
+        "y": 100,
+        "wires": [
+            [
+                "cd0d81fa.515f6",
+                "16065012.0f1388"
+            ]
+        ]
+    },
+    {
+        "id": "a15919d7.a11ef8",
+        "type": "inject",
+        "z": "3e0df11a.8f1486",
+        "name": "Start Forecast Report",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 140,
+        "y": 100,
+        "wires": [
+            [
+                "1263e720.6beaf9"
+            ]
+        ]
+    },
+    {
+        "id": "cd0d81fa.515f6",
+        "type": "debug",
+        "z": "3e0df11a.8f1486",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "forecasts",
+        "x": 580,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "16065012.0f1388",
+        "type": "function",
+        "z": "3e0df11a.8f1486",
+        "name": "Find forecast for Friday - start of the Hackathon",
+        "func": "// The Hackathon starts on a few days from now\n// WeatherInsights returned the 10 day forecast.\n// Friday is a few days from now so let's loop through and look for .dow == Friday\nvar i = 0;\nwhile( msg.forecasts[i].dow != \"Friday\") {\n    i++;\n}\nvar BerlinForecast = \"The forecast for \" + msg.forecasts[i].dow +\" is \"+ msg.forecasts[i].narrative;\nmsg.payload = BerlinForecast;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 240,
+        "y": 200,
+        "wires": [
+            [
+                "6700f1c3.04f2",
+                "66803a13.fc76cc"
+            ]
+        ]
+    },
+    {
+        "id": "6700f1c3.04f2",
+        "type": "debug",
+        "z": "3e0df11a.8f1486",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 570,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "6ea21736.8706e8",
+        "type": "watson-text-to-speech",
+        "z": "3e0df11a.8f1486",
+        "name": "",
+        "lang": "de-DE",
+        "langhidden": "de-DE",
+        "langcustom": "NoCustomisationSetting",
+        "langcustomhidden": "",
+        "voice": "de-DE_BirgitVoice",
+        "voicehidden": "en-US_MichaelVoice",
+        "format": "audio/wav",
+        "password": "",
+        "x": 340,
+        "y": 300,
+        "wires": [
+            [
+                "2546a272.4f258e"
+            ]
+        ]
+    },
+    {
+        "id": "2546a272.4f258e",
+        "type": "change",
+        "z": "3e0df11a.8f1486",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "speech",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 520,
+        "y": 300,
+        "wires": [
+            [
+                "857cce75.8a79b8"
+            ]
+        ]
+    },
+    {
+        "id": "857cce75.8a79b8",
+        "type": "play audio",
+        "z": "3e0df11a.8f1486",
+        "name": "",
+        "voice": "",
+        "x": 690,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "66803a13.fc76cc",
+        "type": "watson-translator",
+        "z": "3e0df11a.8f1486",
+        "name": "",
+        "action": "translate",
+        "basemodel": "",
+        "domain": "news",
+        "srclang": "en",
+        "destlang": "fr",
+        "password": "",
+        "custom": "",
+        "domainhidden": "",
+        "srclanghidden": "",
+        "destlanghidden": "",
+        "basemodelhidden": "",
+        "customhidden": "",
+        "filetype": "forcedglossary",
+        "trainid": "",
+        "lgparams2": "lparams",
+        "ldparamshidden2": "",
+        "x": 150,
+        "y": 300,
+        "wires": [
+            [
+                "6ea21736.8706e8"
+            ]
+        ]
+    },
+    {
+        "id": "e20ea1d8.3871e8",
+        "type": "debug",
+        "z": "68157612.5bc228",
+        "name": "Tone categories",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 940,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "8fe460ad.9377f",
+        "type": "function",
+        "z": "68157612.5bc228",
+        "name": "HighScore",
+        "func": "var emotions = [];\nemotions = msg.response.document_tone.tone_categories\n                .filter(function(c){\n                    if (c.category_id == \"emotion_tone\")\n                    {return c; }\n                    })[0].tones;\n                    \n//rename tone_id to topic\nvar myscore =  0;     \nvar mynewmsg ={};\n//msg.payload = emotions;\nfor (var i=0; i<emotions.length; i++) {\n\n    if(emotions[i].score > myscore)\n    {\n        msg.payload = emotions[i].score;\n        msg.topic = emotions[i].tone_name;\n        myscore = emotions[i].score;\n    }\n //   node.send(msg);\n}\nmynewmsg = msg;\nreturn mynewmsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 710,
+        "y": 420,
+        "wires": [
+            [
+                "22b1c88f.238988",
+                "b1888a9a.8e6c38"
+            ]
+        ]
+    },
+    {
+        "id": "22b1c88f.238988",
+        "type": "debug",
+        "z": "68157612.5bc228",
+        "name": "Score",
+        "active": true,
+        "console": "false",
+        "complete": "topic",
+        "x": 910,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "7c7a7a36.fc348c",
+        "type": "inject",
+        "z": "68157612.5bc228",
+        "name": "Angry test",
+        "topic": "",
+        "payload": "I hate boring demos",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 280,
+        "wires": [
+            [
+                "607656d4.7393b8"
+            ]
+        ]
+    },
+    {
+        "id": "9ece7bbd.6011f8",
+        "type": "debug",
+        "z": "68157612.5bc228",
+        "name": "Print msg.response",
+        "active": false,
+        "console": "false",
+        "complete": "response",
+        "x": 730,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "449eac7f.9a7a2c",
+        "type": "watson-tone-analyzer-v3",
+        "z": "68157612.5bc228",
+        "name": "Analyze Tone",
+        "tones": "emotion",
+        "sentences": "true",
+        "contentType": "false",
+        "x": 500,
+        "y": 380,
+        "wires": [
+            [
+                "8fe460ad.9377f",
+                "9ece7bbd.6011f8",
+                "875a664c.07aa7"
+            ]
+        ]
+    },
+    {
+        "id": "875a664c.07aa7",
+        "type": "change",
+        "z": "68157612.5bc228",
+        "name": "tone_categories",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "response.document_tone.tone_categories",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 720,
+        "y": 380,
+        "wires": [
+            [
+                "e20ea1d8.3871e8"
+            ]
+        ]
+    },
+    {
+        "id": "fb3cd3.a661933",
+        "type": "twitter in",
+        "z": "68157612.5bc228",
+        "twitter": "a5421f62.7dc89",
+        "tags": "",
+        "user": "false",
+        "name": "",
+        "topic": "tweets",
+        "inputs": 1,
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "4fe56b96.076f74",
+                "59a78fef.a8d2b8",
+                "607656d4.7393b8"
+            ]
+        ]
+    },
+    {
+        "id": "4fe56b96.076f74",
+        "type": "debug",
+        "z": "68157612.5bc228",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "tweet.text",
+        "x": 320,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "e5853bba.da1d98",
+        "type": "inject",
+        "z": "68157612.5bc228",
+        "name": "Happy test",
+        "topic": "",
+        "payload": "every one is awesome",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 200,
+        "wires": [
+            [
+                "607656d4.7393b8"
+            ]
+        ]
+    },
+    {
+        "id": "607656d4.7393b8",
+        "type": "change",
+        "z": "68157612.5bc228",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "tweet.text",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "449eac7f.9a7a2c",
+                "8f021b.402495e8",
+                "c04ebbc9.e8ff48"
+            ]
+        ]
+    },
+    {
+        "id": "5e6db815.0feda8",
+        "type": "inject",
+        "z": "68157612.5bc228",
+        "name": "Sadness test",
+        "topic": "",
+        "payload": "This is miserable and sad",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "607656d4.7393b8"
+            ]
+        ]
+    },
+    {
+        "id": "59a78fef.a8d2b8",
+        "type": "debug",
+        "z": "68157612.5bc228",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 310,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "8f021b.402495e8",
+        "type": "debug",
+        "z": "68157612.5bc228",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 510,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "b1888a9a.8e6c38",
+        "type": "switch",
+        "z": "68157612.5bc228",
+        "name": "Select Emotion",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Joy",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Fear",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Sadness",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Anger",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Disgust",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 6,
+        "x": 500,
+        "y": 600,
+        "wires": [
+            [
+                "14702aa1.b7b9a5"
+            ],
+            [],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "c04ebbc9.e8ff48",
+        "type": "watson-text-to-speech",
+        "z": "68157612.5bc228",
+        "name": "",
+        "lang": "en-US",
+        "langhidden": "en-US",
+        "langcustom": "NoCustomisationSetting",
+        "langcustomhidden": "",
+        "voice": "en-US_MichaelVoice",
+        "voicehidden": "en-US_MichaelVoice",
+        "format": "audio/wav",
+        "password": "5824BY7NvNkT",
+        "x": 520,
+        "y": 200,
+        "wires": [
+            [
+                "1d95ddc8.59d4ca"
+            ]
+        ]
+    },
+    {
+        "id": "42e4227b.f67dbc",
+        "type": "play audio",
+        "z": "68157612.5bc228",
+        "name": "",
+        "voice": "",
+        "x": 910,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "1d95ddc8.59d4ca",
+        "type": "function",
+        "z": "68157612.5bc228",
+        "name": "Speech Buffer",
+        "func": "msg.payload = msg.speech;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 720,
+        "y": 200,
+        "wires": [
+            [
+                "42e4227b.f67dbc"
+            ]
+        ]
+    },
+    {
+        "id": "1bdeaf5b.2e8921",
+        "type": "twilio out",
+        "z": "68157612.5bc228",
+        "service": "_ext_",
+        "twilio": "259cd171.16da96",
+        "from": "",
+        "number": "15515551234",
+        "name": "",
+        "x": 880,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "14702aa1.b7b9a5",
+        "type": "function",
+        "z": "68157612.5bc228",
+        "name": "Joy",
+        "func": "//  TXT a Joyful message to my Mobile phone\nmsg.payload = msg.topic;\n\n// Do something useful here.\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 560,
+        "wires": [
+            [
+                "1bdeaf5b.2e8921"
+            ]
+        ]
+    }
+]
